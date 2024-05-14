@@ -20,7 +20,3 @@ spring:
    max-request-size: 5MB
    file-size-threshold: 2KB	
   
- security:
-  jwt:
-   jwtSecret: 
-   jwtExpirationMs: 3600000

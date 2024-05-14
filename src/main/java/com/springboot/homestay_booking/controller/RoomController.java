@@ -50,7 +50,6 @@ public class RoomController {
 
 	private final BookingRoomService bookingService;
 
-
 	@PostMapping("/add/new-room")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<RoomResponse> addNewRoom(@RequestParam("photo") MultipartFile photo,
@@ -92,12 +91,11 @@ public class RoomController {
 		roomService.deleteRoom(roomId);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
-	
+
 	@PutMapping("/update/{roomId}")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<RoomResponse> updateRoom(@PathVariable Long roomId,
-			@RequestParam(required = false) String roomType, 
-			@RequestParam(required = false) Float roomPrice,
+			@RequestParam(required = false) String roomType, @RequestParam(required = false) Float roomPrice,
 			@RequestParam(required = false) MultipartFile photo) throws SQLException, IOException {
 		byte[] photoBytes = photo != null && !photo.isEmpty() ? photo.getBytes()
 				: roomService.getRoomPhotoByRoomId(roomId);
@@ -116,23 +114,24 @@ public class RoomController {
 			return ResponseEntity.ok(Optional.of(roomResponse));
 		}).orElseThrow(() -> new ResourceNotFoundException("Room not found"));
 	}
-	
+
 	@GetMapping("/available-rooms")
-	public ResponseEntity<List<RoomResponse>> getAvailableRooms(@RequestParam("checkinDate") @DateTimeFormat(iso=DateTimeFormat.ISO.DATE) LocalDate checkinDate, 
-			@RequestParam("checkoutDate") @DateTimeFormat(iso=DateTimeFormat.ISO.DATE) LocalDate checkoutDate, 
+	public ResponseEntity<List<RoomResponse>> getAvailableRooms(
+			@RequestParam("checkinDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkinDate,
+			@RequestParam("checkoutDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkoutDate,
 			@RequestParam("roomType") String roomType) throws SQLException {
-		
+
 		List<Room> availableRooms = roomService.getAvailableRooms(checkinDate, checkoutDate, roomType);
 		List<RoomResponse> roomResponses = new ArrayList<>();
 		for (Room room : availableRooms) {
 			byte[] photoByte = roomService.getRoomPhotoByRoomId(room.getId());
-			if (photoByte != null && photoByte.length > 0 ){
+			if (photoByte != null && photoByte.length > 0) {
 				String photoBase64 = Base64.encodeBase64String(photoByte);
 				RoomResponse roomResponse = getRoomResponse(room);
 				roomResponse.setPhoto(photoBase64);
 				roomResponses.add(roomResponse);
 			}
- 		}
+		}
 		if (roomResponses.isEmpty()) {
 			return ResponseEntity.noContent().build();
 		} else {
