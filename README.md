@@ -1,3 +1,5 @@
+# Homestay Booking
+
 Homestay Booking is a web application to book a room in a homestay, a customer books a room by filling in the personal information, the duration of the reservation.
 
 ## Technologies
