@@ -1,3 +1,17 @@
+Homestay Booking is a web application to book a room in a homestay, a customer books a room by filling in the personal information, the duration of the reservation.
+
+## Technologies
+Backend: 
+Java, Spring Boot
+
+Frontend: ReactJS
+
+Database: MySQL
+
+
+
+
+
 ## Features
 
 + Register a new account, Login an account
